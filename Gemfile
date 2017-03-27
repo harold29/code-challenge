@@ -35,6 +35,7 @@ gem 'jbuilder', '~> 2.5'
 #Developer's choice
 gem 'figaro'
 gem 'httparty'
+gem 'bootstrap', '~> 4.0.0.alpha3'
 
 
 # Use Capistrano for deployment

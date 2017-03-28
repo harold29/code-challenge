@@ -1,5 +1,14 @@
-<% @video_list.each do |video| %>
-  <div class="video-wrapper col-lg-4 col-md-4 col-sm-6 col-xs-12">
-    <%= video %>
-  </div>
+<% if !@video_list.nil? %>
+  <% @video_list.each do |video| %>
+    <div class="video-wrapper col-lg-4 col-md-4 col-sm-6 col-xs-12">
+      <a href=<%= videos_show_path(id: video["_id"]) %> class="video-link">
+        <div class="video-container">
+          <img class="video-img" src="<%= video["thumbnails"][1]["url"]  %>" alt="">
+          <div class="video-title">
+            <%= video["title"] %>
+          </div>
+        </div>
+      </a>
+    </div>
+  <% end %>
 <% end %>

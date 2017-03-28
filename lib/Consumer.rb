@@ -5,7 +5,7 @@ class Consumer
 
   format :json
 
-  base_uri 'login.zype.com'
+  base_uri 'https://login.zype.com'
 
 
   # Init method of Consumer Class.
@@ -31,19 +31,20 @@ class Consumer
   # @return [Consumer] Initializated Consumer object is return unless the request
   # is failed. In this case an error is raised.
   def self.auth_consumer(user, pwd)
-    response = post('/oauth/token/', body: { client_id: ENV['client_id'],
-      client_secret: ENV['client_secret'],
-      username: user,
-      password: pwd,
-      grant_type: "password" }.to_json,
-      headers: { 'Content-Type' => 'application/json'}
+    response = post('/oauth/token/',
+      :headers => {'Content-Type' => 'application/x-www-form-urlencoded'},
+      :body => {"client_id": ENV['client_id'],
+                "client_secret": ENV['client_secret'],
+                "username": user,
+                "password": pwd,
+                "grant_type": "password"
+              }
     )
-
-    if response.success?
-      new(response)
-    else
-      # TODO: create response in case the authentication is failed
-    end
+    # if response.success?
+    #   new(response)
+    # else
+    #   # TODO: create response in case the authentication is failed
+    # end
   end
 
   # This method refresh the Consumer access token. Communicates with zype's api
@@ -51,22 +52,24 @@ class Consumer
   #
   # @param [String] refresh_token This token is stored when Consumer Object is created.
   # @return [Consumer] Consumer Object
-  def self.refresh_token()
+  def self.refresh_token(refresh_token)
     response = post('/oauth/token/',
       body: { client_id: ENV['client_id'],
       client_secret: ENV['client_secret'],
-      refresh_token: self.refresh_token,
+      refresh_token: refresh_token,
       grant_type: 'refresh_token' }
     )
     if response.success?
       # TODO: create response on success
-      self.access_token = response["access_token"]
-      self.expires_in = response["expires_in"]
-      self.refresh_token = response["refresh_token"]
-      self.scope = response["scope"]
-      self.created_at = response["created_at"]
-      self.token_type = response["token_type"]
+      # self.access_token = response["access_token"]
+      # self.expires_in = response["expires_in"]
+      # self.refresh_token = response["refresh_token"]
+      # self.scope = response["scope"]
+      # self.created_at = response["created_at"]
+      # self.token_type = response["token_type"]
+      true
     else
+      false
       # TODO: create response on fail
     end
   end
@@ -76,8 +79,8 @@ class Consumer
   # TODO: return a boolean
   # @param [nil]
   # @return [boolean?]
-  def self.get_token_status()
-    response = get('/oauth/token/info/', query: { access_token: self.access_token })
+  def self.get_token_status(access_token)
+    response = get('/oauth/token/info/', query: { access_token: access_token })
     if response["expires_in_seconds"] <= 0
       false
     else

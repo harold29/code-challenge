@@ -1,0 +1,18 @@
+<% if !@video.nil? %>
+  <div class="container video-info-container">
+    <div class="row subc-row">
+      <div id="zype_<%= @vid_id %>">
+      </div>
+      <script src="https://player.zype.com/embed/<%= @vid_id %>.js?autoplay=true&app_key=<%= ENV["app_key"] %>" type="text/javascript">
+      </script>
+    </div>
+    <div class="row subc-row">
+      <h4 class="row-title">Title</h4>
+      <%= @video["title"] %>
+    </div>
+    <div class="row subc-row">
+      <h4 class="row-title">Description</h4>
+      <%= @video["description"] %>
+    </div>
+  </div>
+<% end %>

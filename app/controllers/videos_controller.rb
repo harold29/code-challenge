@@ -3,12 +3,16 @@ class VideosController < ApplicationController
 
   def index
     # video = Video.new()
-    @video_list = Video.get_list()["response"]
+    logger.debug "potato0"
+    @video_list = Video.get_list()
   end
 
   def show
     @video = Video.get_video(params[:id])
-    if @video["suscription_required"]
+    @vid_id = params[:id]
+    if !@video.nil? && !@video["suscription_required"] && !current_user.logged_in?
+      session[:video_id] = @vid_id
+      redirect_to login_url, video_id: and return
       # TODO: render user_login screen
     else
       render 'show'

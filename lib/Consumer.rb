@@ -55,13 +55,6 @@ class Consumer
       grant_type: 'refresh_token' }
     )
     if response.success?
-      # TODO: create response on success
-      # self.access_token = response["access_token"]
-      # self.expires_in = response["expires_in"]
-      # self.refresh_token = response["refresh_token"]
-      # self.scope = response["scope"]
-      # self.created_at = response["created_at"]
-      # self.token_type = response["token_type"]
       true
     else
       false
@@ -82,4 +75,9 @@ class Consumer
       true
     end
   end
+
+  def self.create_user
+
+  end
+
 end

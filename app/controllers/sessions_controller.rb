@@ -45,12 +45,19 @@ class SessionsController < ApplicationController
             render 'new'
           end
         else
-          render 'new'
+          puts "POTATO"
+          puts response.inspect
+          flash[:error] = 'Invalid email/password combination'
+          render action: 'new'
         end
       end
     else
       redirect_to videos_show_url(id: session.delete(:video_id))
     end
+  end
+
+  def choose
+    render 'choose'
   end
 
   # Destroy the current session (Logout) and returns to root url

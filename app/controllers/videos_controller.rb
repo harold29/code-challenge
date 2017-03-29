@@ -20,7 +20,7 @@ class VideosController < ApplicationController
         render 'show'
       else
         session[:video_id] = @vid_id
-        redirect_to login_url and return
+        redirect_to choose_url and return
         # TODO: render user_login screen
       end
     else

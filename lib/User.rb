@@ -38,7 +38,9 @@ class Consumer
       grant_type: "password" }.to_json,
       headers: { 'Content-Type' => 'application/json'}
     )
-
+    puts "poteito"
+    puts response.inspect
+    
     if response.success?
       new(response)
     else

@@ -40,11 +40,6 @@ class Consumer
                 "grant_type": "password"
               }
     )
-    # if response.success?
-    #   new(response)
-    # else
-    #   # TODO: create response in case the authentication is failed
-    # end
   end
 
   # This method refresh the Consumer access token. Communicates with zype's api

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get 'videos/show'
   get "/signup",    to: 'users#new'
   get "/signup",    to: 'users#create'
+  get '/choose',    to: 'sessions#choose'
   get '/login',     to: 'sessions#new'
   post '/login',    to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'

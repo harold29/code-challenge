@@ -18,7 +18,8 @@ class Video
     new()
     puts "potato1 de fuego"
     response = get('/videos', query: { app_key: ENV["app_key"] })
-    puts response.inspect
+    puts ENV["app_key"]
+    puts "potato2 de fuego"
     if response.success? || !response.nil?
       response["response"]
     else

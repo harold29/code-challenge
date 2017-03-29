@@ -15,7 +15,7 @@ class VideosController < ApplicationController
   def show
     @video = Video.get_video(params[:id])
     @vid_id = params[:id]
-    if @video["suscription_required"]
+    if !@video["suscription_required"]
       if logged_in?
         render 'show'
       else

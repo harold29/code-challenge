@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  # Description of method
+  #
+  # @return [Type] description of returned object
   def new
     @user = User.new
   end

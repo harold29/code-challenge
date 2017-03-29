@@ -1,78 +1,71 @@
 class SessionsController < ApplicationController
   require 'Consumer'
 
+  # Render /session/new.html.erb view for login and stores request source page
+  #
+  # @return [nil]
   def new
+    session[:return_to] ||= request.referer
   end
 
+  # Search for an already created user, if not, creates new user in DB and if
+  # user credentials are valid it concedes permission to see the selected video
+  #
+  # @return [nil]
   def create
-    if current_user.nil? || !current_user.logged_in?
-
-    else
-
-    end
-    user = ApplicationRecord::User.find_by(email: params[:session][:email].downcase)
-    if user
-      puts "potato1"
-      if Consumer.get_token_status(user.access_token)
-        puts "potato2"
-        log_in user
-        # redirect_to videos_show_url, id: session["id"]
-      else
-        puts "potato3"
-        if update_user_at_refresh_token(user.refresh_token, email)
-          puts "potato4"
+    if !logged_in?
+      user = ApplicationRecord::User.find_by(email: params[:session][:email].downcase)
+      if user
+        if Consumer.get_token_status(user.access_token)
           log_in user
+          redirect_to videos_show_url(id: session.delete(:video_id))
         else
-          puts "potato5"
-          redirect_to root_url
+          destroy
+          if update_user_at_refresh_token(user.refresh_token, email)
+            log_in user
+            redirect_to videos_show_url(id: session(:video_id))
+          else
+            redirect_to root_url
+          end
         end
-      end
-    else
-      response = Consumer.auth_consumer(params[:session][:email], params[:session][:password])
-      if response.success?
-        # consumer = Consumer.new(response.parsed_response)
-        # puts consumer
-        user = User.create(access_token: response.parsed_response["access_token"],
-                            expires_in: response.parsed_response["expires_in"],
-                            refresh_token: response.parsed_response["refresh_token"],
-                            scope: response.parsed_response["scope"],
-                            created_at: response.parsed_response["created_at"],
-                            token_type: response.parsed_response["token_type"],
-                            email: params[:session][:email]
-                          )
-        if user.save
-          log_in user
+      else
+        response = Consumer.auth_consumer(params[:session][:email], params[:session][:password])
+        if response.success?
+          user = User.create(access_token: response.parsed_response["access_token"],
+                              expires_in: response.parsed_response["expires_in"],
+                              refresh_token: response.parsed_response["refresh_token"],
+                              scope: response.parsed_response["scope"],
+                              created_at: response.parsed_response["created_at"],
+                              token_type: response.parsed_response["token_type"],
+                              email: params[:session][:email]
+                            )
+          if user.save
+            log_in user
+          else
+            render 'new'
+          end
         else
           render 'new'
         end
-      else
-        render 'new'
       end
+    else
+      redirect_to videos_show_url(id: session.delete(:video_id))
     end
   end
 
+  # Destroy the current session (Logout) and returns to root url
+  #
+  # @return [nil]
   def destroy
     log_out
     redirect_to root_url
   end
 
-  # def refresh_user(user, email)
-  #   response = user.refresh_token()
-  #   user.access_token = response["access_token"]
-  #   user.expires_in = response["expires_in"]
-  #   user.refresh_token = response["refresh_token"]
-  #   user.scope = response["scope"]
-  #   user.created_at = response["created_at"]
-  #   user.token_type = response["token_type"]
+  # Aux method that updates user info when token is refreshed in zype's api
   #
-  #   update_user_at_refresh_token(user, email)
-  # end
-  #
-
-  def log_user
-
-  end
-
+  # @param [string] refresh_token string stored when user log in
+  # @param [email] email user email
+  # @return [boolean] returns true if user is updated and false if not
   def update_user_at_refresh_token(refresh_token, email)
     response = Consumer.refresh_token(user.refresh_token)
     if response.success?
@@ -90,7 +83,6 @@ class SessionsController < ApplicationController
     else
       false
     end
-
   end
 
 end

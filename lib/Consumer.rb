@@ -76,8 +76,5 @@ class Consumer
     end
   end
 
-  def self.create_user
-
-  end
 
 end

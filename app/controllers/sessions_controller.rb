@@ -45,8 +45,6 @@ class SessionsController < ApplicationController
             render 'new'
           end
         else
-          puts "POTATO"
-          puts response.inspect
           flash[:error] = 'Invalid email/password combination'
           render action: 'new'
         end

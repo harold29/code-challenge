@@ -1,6 +1,6 @@
 <% if !@video.nil? %>
   <div class="container video-info-container">
-    <div class="row subc-row">
+    <div class="row subc-row" id="video-container">
       <div id="zype_<%= @vid_id %>" class="zype-video-player">
       </div>
       <script src="https://player.zype.com/embed/<%= @vid_id %>.js?autoplay=true&app_key=<%= ENV["app_key"] %>" type="text/javascript">
